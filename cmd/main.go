@@ -11,5 +11,5 @@ func main() {
 
 	// Initialize logger
 	logger.InitLogger()
-	
+
 }
