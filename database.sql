@@ -1,6 +1,6 @@
-CREATE DATABASE user_management;
+CREATE DATABASE TanAgahDb;
 
-USE user_management;
+USE TanAgahDb;
 
 CREATE TABLE users (
                        id INT AUTO_INCREMENT PRIMARY KEY,
