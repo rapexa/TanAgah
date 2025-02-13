@@ -8,24 +8,37 @@ import (
 	"os"
 )
 
+const (
+	MAX_UPLOAD_SIZE = 10 * 1024 * 1024 // 10MB
+	UPLOAD_DIR      = "./uploads"
+)
+
 type Config struct {
-	DBHost     string
-	DBPort     string
-	DBUser     string
-	DBPassword string
-	DBName     string
-	AppPort    string
+	DBHost         string
+	DBPort         string
+	DBUser         string
+	DBPassword     string
+	DBName         string
+	AppPort        string
+	UploadDir      string
+	MaxUploadSize  int64
+	AllowedOrigins []string
+	AllowedTypes   []string
 }
 
 func LoadConfig() *Config {
 	godotenv.Load()
 	return &Config{
-		DBHost:     os.Getenv("DB_HOST"),
-		DBPort:     os.Getenv("DB_PORT"),
-		DBUser:     os.Getenv("DB_USER"),
-		DBPassword: os.Getenv("DB_PASSWORD"),
-		DBName:     os.Getenv("DB_NAME"),
-		AppPort:    os.Getenv("APP_PORT"),
+		DBHost:         os.Getenv("DB_HOST"),
+		DBPort:         os.Getenv("DB_PORT"),
+		DBUser:         os.Getenv("DB_USER"),
+		DBPassword:     os.Getenv("DB_PASSWORD"),
+		DBName:         os.Getenv("DB_NAME"),
+		AppPort:        os.Getenv("APP_PORT"),
+		UploadDir:      os.Getenv("UPLOAD_DIR"),
+		MaxUploadSize:  10 << 20, // 10MB default
+		AllowedOrigins: []string{os.Getenv("ALLOWED_ORIGINS")},
+		AllowedTypes:   []string{"image/jpeg", "image/png", "application/pdf"},
 	}
 }
 

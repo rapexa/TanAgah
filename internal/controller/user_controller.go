@@ -31,8 +31,7 @@ func (c *UserController) CreateUser(ctx *gin.Context) {
 
 func (c *UserController) GetUser(ctx *gin.Context) {
 	id := ctx.Param("id")
-	uintId, _ := strconv.ParseUint(id, 10, 32)
-	user, err := c.userService.GetUser(uint(uintId))
+	user, err := c.userService.GetUser(id)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 		return
@@ -49,8 +48,7 @@ func (c *UserController) UpdateUser(ctx *gin.Context) {
 	}
 
 	// Fetch the existing user by ID
-	uintId, _ := strconv.ParseUint(id, 10, 32)
-	existingUser, err := c.userService.GetUser(uint(uintId))
+	existingUser, err := c.userService.GetUser(id)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 		return

@@ -8,13 +8,17 @@ import (
 
 type UserService interface {
 	CreateUser(user *entity.User) error
-	GetUser(id uint) (*entity.User, error)
+	GetUser(id string) (*entity.User, error) // id is string
 	UpdateUser(user *entity.User) error
 	DeleteUser(id uint) error
 }
 
 type userService struct {
 	userRepo repository.UserRepository
+}
+
+func NewUserService(userRepo repository.UserRepository) UserService {
+	return &userService{userRepo}
 }
 
 func (s *userService) CreateUser(user *entity.User) error {

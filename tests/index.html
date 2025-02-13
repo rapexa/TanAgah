@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<body>
+<input type="file" id="fileInput" multiple>
+<button onclick="uploadFiles()">Upload</button>
+
+<div id="progressContainer" style="width: 300px; margin-top: 20px;">
+    <div id="progressBar" style="height: 20px; background: #4caf50; width: 0%;"></div>
+    <div id="progressText" style="text-align: center;">0%</div>
+</div>
+
+<script>
+    function uploadFiles() {
+        const fileInput = document.getElementById('fileInput');
+        const files = fileInput.files;
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+
+        if (files.length === 0) {
+            alert('Please select files');
+            return;
+        }
+
+        const formData = new FormData();
+        for (const file of files) {
+            formData.append('file', file);
+        }
+
+        const xhr = new XMLHttpRequest();
+
+        // Track upload progress
+        xhr.upload.addEventListener('progress', function(e) {
+            if (e.lengthComputable) {
+                const percent = (e.loaded / e.total) * 100;
+                progressBar.style.width = percent + '%';
+                progressText.textContent = Math.round(percent) + '%';
+            }
+        });
+
+        xhr.open('POST', 'http://localhost:8080/api/v1/users/1/upload', true);
+
+        xhr.onload = function() {
+            if (xhr.status === 201) {
+                const response = JSON.parse(xhr.responseText);
+                console.log('Upload successful:', response.files);
+                progressText.textContent = 'Upload complete!';
+            } else {
+                console.error('Upload failed:', xhr.statusText);
+                progressText.textContent = 'Upload failed';
+            }
+        };
+
+        xhr.onerror = function() {
+            console.error('Upload error');
+            progressText.textContent = 'Upload error';
+        };
+
+        xhr.send(formData);
+    }
+</script>
+</body>
+</html>

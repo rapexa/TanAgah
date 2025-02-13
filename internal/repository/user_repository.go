@@ -7,7 +7,7 @@ import (
 
 type UserRepository interface {
 	Create(user *entity.User) error
-	FindByID(id uint) (*entity.User, error)
+	FindByID(id uint) (*entity.User, error) // id is uint
 	Update(user *entity.User) error
 	Delete(id uint) error
 }
