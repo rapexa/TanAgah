@@ -36,7 +36,14 @@ func (c *UserController) RegisterUser(ctx *gin.Context) {
 		utils.SendDataError500(ctx, err.Error())
 		return
 	}
-	utils.SendSuccessResponse(ctx, user, nil)
+
+	utils.SendSuccessResponse(ctx, model.MainRp{
+		ID:       user.ID,
+		Name:     user.Name,
+		Email:    user.Email,
+		Role:     user.Role,
+		JwtToken: user.JwtToken,
+	}, nil)
 }
 
 func (c *UserController) LoginUser(ctx *gin.Context) {
@@ -52,7 +59,14 @@ func (c *UserController) LoginUser(ctx *gin.Context) {
 		return
 	}
 
-	utils.SendSuccessResponse(ctx, user, nil)
+	utils.SendSuccessResponse(ctx, model.MainRp{
+		ID:       user.ID,
+		Name:     user.Name,
+		Email:    user.Email,
+		Role:     user.Role,
+		JwtToken: user.JwtToken,
+	}, nil)
+	
 }
 
 func (c *UserController) DeleteUser(ctx *gin.Context) {

@@ -1,9 +1,11 @@
 package model
 
 type MainRp struct {
-	Name     string `json:"name" binding:"required"`
-	Email    string `json:"email" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	ID       uint   `json:"id"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Role     string `json:"role"`
+	JwtToken string `json:"jwt_token"`
 }
 
 type UploadResponse struct {
