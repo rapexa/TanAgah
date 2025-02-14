@@ -10,7 +10,6 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"log"
-	"net/http"
 	"os"
 	"time"
 )
@@ -57,19 +56,14 @@ func main() {
 	{
 		authGroup.POST("/register", userController.RegisterUser)
 		authGroup.POST("/login", userController.LoginUser)
-		authGroup.GET("/users/:id", userController.GetUser)
-		authGroup.PUT("/users/:id", userController.UpdateUser)
-		authGroup.DELETE("/users/:id", userController.DeleteUser)
-		authGroup.POST("/users/:id/upload", fileController.HandleFileUpload)
 	}
 
 	// App API group
 	appGroup := router.Group("/api/v1/app")
 	appGroup.Use(middlewares.JWTMiddleware) // Using the JWT middleware
 	{
-		appGroup.GET("/data", func(c *gin.Context) {
-			c.String(http.StatusOK, "Hello World")
-		})
+		appGroup.POST("/users/:id/upload", fileController.HandleFileUpload)
+		appGroup.POST("/users/:id/delete", userController.DeleteUser)
 	}
 
 	// Start server

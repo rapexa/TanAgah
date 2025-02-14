@@ -10,6 +10,7 @@ import (
 type UserService interface {
 	CreateUser(user *entity.User) error
 	GetUser(id string) (*entity.User, error) // id is string
+	GetUserByUsername(username string) (*entity.User, error)
 	UpdateUser(user *entity.User) error
 	DeleteUser(id uint) error
 	LoginUser(username, password string) (*entity.User, error)
@@ -45,6 +46,10 @@ func (s *userService) GetUser(id string) (*entity.User, error) {
 		return nil, err
 	}
 	return s.userRepo.FindByID(uint(userID))
+}
+
+func (s *userService) GetUserByUsername(username string) (*entity.User, error) {
+	return s.userRepo.FindByUsername(username)
 }
 
 func (s *userService) UpdateUser(user *entity.User) error {

@@ -11,6 +11,7 @@ import (
 const (
 	UPLOAD_DIR = "./uploads"
 	RoleUser   = "user"
+	RoleCoach  = "coach"
 )
 
 type Config struct {
