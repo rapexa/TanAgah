@@ -6,9 +6,11 @@ import (
 	"TanAgah/internal/logger"
 	"TanAgah/internal/repository"
 	"TanAgah/internal/service"
+	"TanAgah/pkg/middleware" // adjusted import path if needed
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"log"
+	"net/http"
 	"os"
 	"time"
 )
@@ -50,13 +52,24 @@ func main() {
 		MaxAge:        12 * time.Hour,
 	}))
 
-	api := router.Group("/api/v1")
+	// Auth API group
+	authGroup := router.Group("/api/v1/auth")
 	{
-		api.POST("/users", userController.CreateUser)
-		api.GET("/users/:id", userController.GetUser)
-		api.PUT("/users/:id", userController.UpdateUser)
-		api.DELETE("/users/:id", userController.DeleteUser)
-		api.POST("/users/:id/upload", fileController.HandleFileUpload)
+		authGroup.POST("/register", userController.RegisterUser)
+		authGroup.POST("/login", userController.LoginUser)
+		authGroup.GET("/users/:id", userController.GetUser)
+		authGroup.PUT("/users/:id", userController.UpdateUser)
+		authGroup.DELETE("/users/:id", userController.DeleteUser)
+		authGroup.POST("/users/:id/upload", fileController.HandleFileUpload)
+	}
+
+	// App API group
+	appGroup := router.Group("/api/v1/app")
+	appGroup.Use(middlewares.JWTMiddleware) // Using the JWT middleware
+	{
+		appGroup.GET("/data", func(c *gin.Context) {
+			c.String(http.StatusOK, "Hello World")
+		})
 	}
 
 	// Start server

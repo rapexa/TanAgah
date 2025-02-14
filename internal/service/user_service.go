@@ -3,6 +3,7 @@ package service
 import (
 	"TanAgah/internal/entity"
 	"TanAgah/internal/repository"
+	"TanAgah/internal/utils"
 	"strconv"
 )
 
@@ -11,6 +12,7 @@ type UserService interface {
 	GetUser(id string) (*entity.User, error) // id is string
 	UpdateUser(user *entity.User) error
 	DeleteUser(id uint) error
+	LoginUser(username, password string) (*entity.User, error)
 }
 
 type userService struct {
@@ -23,6 +25,18 @@ func NewUserService(userRepo repository.UserRepository) UserService {
 
 func (s *userService) CreateUser(user *entity.User) error {
 	return s.userRepo.Create(user)
+}
+
+func (s *userService) LoginUser(username, password string) (*entity.User, error) {
+
+	user, err := s.userRepo.FindByUsername(username)
+	if err != nil || user.Password != password {
+		return nil, err
+	}
+	token, err := utils.GenerateJWT(int(user.ID), username)
+	user, err = s.userRepo.UpdateJwtTokenUser(username, token)
+
+	return user, err
 }
 
 func (s *userService) GetUser(id string) (*entity.User, error) {

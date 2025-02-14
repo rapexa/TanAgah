@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	MAX_UPLOAD_SIZE = 10 * 1024 * 1024 // 10MB
-	UPLOAD_DIR      = "./uploads"
+	UPLOAD_DIR = "./uploads"
+	RoleUser   = "user"
 )
 
 type Config struct {
@@ -24,6 +24,7 @@ type Config struct {
 	MaxUploadSize  int64
 	AllowedOrigins []string
 	AllowedTypes   []string
+	JwtSecret      string
 }
 
 func LoadConfig() *Config {
@@ -36,6 +37,7 @@ func LoadConfig() *Config {
 		DBName:         os.Getenv("DB_NAME"),
 		AppPort:        os.Getenv("APP_PORT"),
 		UploadDir:      os.Getenv("UPLOAD_DIR"),
+		JwtSecret:      os.Getenv("JWT_SECRET"),
 		MaxUploadSize:  10 << 20, // 10MB default
 		AllowedOrigins: []string{os.Getenv("ALLOWED_ORIGINS")},
 		AllowedTypes:   []string{"image/jpeg", "image/png", "application/pdf"},

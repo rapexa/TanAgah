@@ -1,7 +1,9 @@
 package controller
 
 import (
+	"TanAgah/internal/config"
 	"TanAgah/internal/entity"
+	"TanAgah/internal/model"
 	"TanAgah/internal/service"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -16,17 +18,40 @@ func NewUserController(userService service.UserService) *UserController {
 	return &UserController{userService}
 }
 
-func (c *UserController) CreateUser(ctx *gin.Context) {
-	var user entity.User
-	if err := ctx.ShouldBindJSON(&user); err != nil {
+func (c *UserController) RegisterUser(ctx *gin.Context) {
+	var registerRq model.RegisterRq
+	if err := ctx.ShouldBindJSON(&registerRq); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
+	}
+
+	user := entity.User{
+		Name:     registerRq.Name,
+		Email:    registerRq.Email,
+		Password: registerRq.Password,
+		Role:     config.RoleUser,
 	}
 	if err := c.userService.CreateUser(&user); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	ctx.JSON(http.StatusCreated, gin.H{"data": user})
+}
+
+func (c *UserController) LoginUser(ctx *gin.Context) {
+	var LoginRq model.LoginRq
+	if err := ctx.ShouldBindJSON(&LoginRq); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	user, err := c.userService.LoginUser(LoginRq.Email, LoginRq.Password)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"data": user})
 }
 
 func (c *UserController) GetUser(ctx *gin.Context) {
