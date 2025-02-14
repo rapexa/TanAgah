@@ -66,8 +66,8 @@ func (c *UserController) DeleteUser(ctx *gin.Context) {
 	}
 
 	user, err := c.userService.GetUserByUsername(DeleteRq.Email)
-	if err != nil || user.Password != DeleteRq.Password {
-		ctx.JSON(http.StatusForbidden, gin.H{"error": err.Error()})
+	if err != nil || user.Password != DeleteRq.Password || uint(uintId) != user.ID {
+		ctx.JSON(http.StatusForbidden, gin.H{"error": "unknown error !"})
 		return
 	}
 

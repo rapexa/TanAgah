@@ -6,7 +6,7 @@ import (
 	"TanAgah/internal/logger"
 	"TanAgah/internal/repository"
 	"TanAgah/internal/service"
-	"TanAgah/pkg/middleware" // adjusted import path if needed
+	"TanAgah/pkg/middleware"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -39,6 +39,8 @@ func main() {
 	fileService := service.NewFileService(fileRepo, cfg)
 	fileController := controller.NewFileController(*fileService, userService)
 
+	jwtRepo := repository.NewJWTRepo(db)
+
 	// Setup router
 	router := gin.Default()
 
@@ -60,7 +62,7 @@ func main() {
 
 	// App API group
 	appGroup := router.Group("/api/v1/app")
-	appGroup.Use(middlewares.JWTMiddleware) // Using the JWT middleware
+	appGroup.Use(middleware.JWTMiddleware(jwtRepo)) // Using the JWT middleware
 	{
 		appGroup.POST("/users/:id/upload", fileController.HandleFileUpload)
 		appGroup.POST("/users/:id/delete", userController.DeleteUser)
