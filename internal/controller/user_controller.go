@@ -5,8 +5,9 @@ import (
 	"TanAgah/internal/entity"
 	"TanAgah/internal/model"
 	"TanAgah/internal/service"
+	"TanAgah/internal/stringResource"
+	"TanAgah/internal/utils"
 	"github.com/gin-gonic/gin"
-	"net/http"
 	"strconv"
 )
 
@@ -21,7 +22,7 @@ func NewUserController(userService service.UserService) *UserController {
 func (c *UserController) RegisterUser(ctx *gin.Context) {
 	var registerRq model.RegisterRq
 	if err := ctx.ShouldBindJSON(&registerRq); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.SendError400Response(ctx, err.Error())
 		return
 	}
 
@@ -32,26 +33,26 @@ func (c *UserController) RegisterUser(ctx *gin.Context) {
 		Role:     config.RoleUser,
 	}
 	if err := c.userService.CreateUser(&user); err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.SendDataError500(ctx, err.Error())
 		return
 	}
-	ctx.JSON(http.StatusCreated, gin.H{"data": user})
+	utils.SendSuccessResponse(ctx, user, nil)
 }
 
 func (c *UserController) LoginUser(ctx *gin.Context) {
 	var LoginRq model.LoginRq
 	if err := ctx.ShouldBindJSON(&LoginRq); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.SendError400Response(ctx, err.Error())
 		return
 	}
 
 	user, err := c.userService.LoginUser(LoginRq.Email, LoginRq.Password)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.SendDataError500(ctx, err.Error())
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"data": user})
+	utils.SendSuccessResponse(ctx, user, nil)
 }
 
 func (c *UserController) DeleteUser(ctx *gin.Context) {
@@ -61,19 +62,19 @@ func (c *UserController) DeleteUser(ctx *gin.Context) {
 
 	var DeleteRq model.DeleteRq
 	if err := ctx.ShouldBindJSON(&DeleteRq); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.SendError400Response(ctx, err.Error())
 		return
 	}
 
 	user, err := c.userService.GetUserByUsername(DeleteRq.Email)
 	if err != nil || user.Password != DeleteRq.Password || uint(uintId) != user.ID {
-		ctx.JSON(http.StatusForbidden, gin.H{"error": "unknown error !"})
+		utils.SendDataError403(ctx, stringResource.GetStrings().UnknownError(ctx))
 		return
 	}
 
 	if err := c.userService.DeleteUser(uint(uintId)); err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.SendDataError500(ctx, err.Error())
 		return
 	}
-	ctx.JSON(http.StatusOK, gin.H{"data": "User deleted successfully"})
+	utils.SendSuccessResponse(ctx, stringResource.GetStrings().UserDeleteSuccess(ctx), nil)
 }

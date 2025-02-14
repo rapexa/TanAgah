@@ -3,6 +3,8 @@ package controller
 import (
 	"TanAgah/internal/model"
 	"TanAgah/internal/service"
+	"TanAgah/internal/stringResource"
+	"TanAgah/internal/utils"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -28,7 +30,7 @@ func (cf *FileController) HandleFileUpload(ctx *gin.Context) {
 	user, err := cf.userService.GetUser(id)
 
 	if err != nil {
-		ctx.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		utils.SendError404Response(ctx, stringResource.GetStrings().UserNotFound(ctx))
 		return
 	}
 
