@@ -27,8 +27,6 @@ func (s *MessageService) EditMessageDb(messageID uint, newContent string, sender
 		return err
 	}
 
-	println(message.SenderID, senderID)
-
 	if message.SenderID != senderID {
 		return nil
 	}

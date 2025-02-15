@@ -1,12 +1,95 @@
 <!DOCTYPE html>
-<html>
-<body>
-<input type="file" id="fileInput" multiple>
-<button onclick="uploadFiles()">Upload</button>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
 
-<div id="progressContainer" style="width: 300px; margin-top: 20px;">
-    <div id="progressBar" style="height: 20px; background: #4caf50; width: 0%;"></div>
-    <div id="progressText" style="text-align: center;">0%</div>
+        .upload-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 400px;
+        }
+
+        h1 {
+            color: #1e90ff;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        #fileInput {
+            padding: 10px;
+            margin: 15px 0;
+            border-radius: 5px;
+            border: 2px solid #1e90ff;
+            background-color: #f0f8ff;
+            width: 100%;
+        }
+
+        #fileInput:hover {
+            border-color: #1c86ee;
+        }
+
+        button {
+            background-color: #1e90ff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #1c86ee;
+        }
+
+        #progressContainer {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        #progressBar {
+            height: 20px;
+            background: #4caf50;
+            width: 0%;
+            border-radius: 10px;
+        }
+
+        #progressText {
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+    </style>
+</head>
+<body>
+<div class="upload-container">
+    <h1>File Upload</h1>
+    <input type="file" id="fileInput" multiple>
+    <button onclick="uploadFiles()">Upload</button>
+
+    <div id="progressContainer">
+        <div id="progressBar"></div>
+        <div id="progressText">0%</div>
+    </div>
 </div>
 
 <script>
@@ -44,15 +127,18 @@
                 const response = JSON.parse(xhr.responseText);
                 console.log('Upload successful:', response.files);
                 progressText.textContent = 'Upload complete!';
+                progressBar.style.backgroundColor = '#4caf50';
             } else {
                 console.error('Upload failed:', xhr.statusText);
                 progressText.textContent = 'Upload failed';
+                progressBar.style.backgroundColor = '#f44336';
             }
         };
 
         xhr.onerror = function() {
             console.error('Upload error');
             progressText.textContent = 'Upload error';
+            progressBar.style.backgroundColor = '#f44336';
         };
 
         xhr.send(formData);
