@@ -8,6 +8,7 @@ import (
 	"TanAgah/internal/stringResource"
 	"TanAgah/internal/utils"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 	"strconv"
 )
 
@@ -26,10 +27,12 @@ func (c *UserController) RegisterUser(ctx *gin.Context) {
 		return
 	}
 
+	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(registerRq.Password), bcrypt.DefaultCost)
+
 	user := entity.User{
 		Name:     registerRq.Name,
 		Email:    registerRq.Email,
-		Password: registerRq.Password,
+		Password: string(hashedPassword),
 		Role:     config.RoleUser,
 	}
 	if err := c.userService.CreateUser(&user); err != nil {
@@ -66,7 +69,7 @@ func (c *UserController) LoginUser(ctx *gin.Context) {
 		Role:     user.Role,
 		JwtToken: user.JwtToken,
 	}, nil)
-	
+
 }
 
 func (c *UserController) DeleteUser(ctx *gin.Context) {

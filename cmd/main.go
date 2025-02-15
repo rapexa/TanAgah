@@ -39,7 +39,13 @@ func main() {
 	fileService := service.NewFileService(fileRepo, cfg)
 	fileController := controller.NewFileController(*fileService, userService)
 
+	// Initialize jwt dependencies
 	jwtRepo := repository.NewJWTRepo(db)
+
+	// Initialize file dependencies
+	messageRepo := repository.NewMessageRepo(db)
+	messageService := service.NewMessageService(messageRepo)
+	messageController := controller.NewMessageController(*messageService)
 
 	// Setup router
 	router := gin.Default()
@@ -58,6 +64,8 @@ func main() {
 	{
 		authGroup.POST("/register", userController.RegisterUser)
 		authGroup.POST("/login", userController.LoginUser)
+		authGroup.GET("/ws/chat", messageController.ChatWebSocket)
+		authGroup.GET("/chat/history/:sender_id/:receiver_id", messageController.GetChatHistory)
 	}
 
 	// App API group

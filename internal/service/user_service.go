@@ -31,7 +31,7 @@ func (s *userService) CreateUser(user *entity.User) error {
 func (s *userService) LoginUser(username, password string) (*entity.User, error) {
 
 	user, err := s.userRepo.FindByUsername(username)
-	if err != nil || user.Password != password {
+	if err != nil || !utils.VerifyPassword(user.Password, password) {
 		return nil, err
 	}
 	token, err := utils.GenerateJWT(int(user.ID), username)

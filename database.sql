@@ -12,3 +12,14 @@ CREATE TABLE users (
                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+CREATE TABLE messages (
+                          id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                          sender_id INT UNSIGNED NOT NULL,
+                          receiver_id INT UNSIGNED NOT NULL,
+                          content TEXT NOT NULL,
+                          edited BOOLEAN NOT NULL DEFAULT FALSE,
+                          created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                          updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                          deleted_at TIMESTAMP DEFAULT NULL
+);
