@@ -2,9 +2,9 @@ package middleware
 
 import (
 	"TanAgah/internal/repository" // Import the repository package
-	"TanAgah/internal/utils"      // Adjust the import path as needed
+	"TanAgah/internal/stringResource"
+	"TanAgah/internal/utils" // Adjust the import path as needed
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 // JWTMiddleware is a middleware function for validating JWT.
@@ -13,7 +13,7 @@ func JWTMiddleware(repo repository.JWTRepository) gin.HandlerFunc {
 		// Extract token from the Authorization header
 		token := c.GetHeader("Authorization")
 		if token == "" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Missing token"})
+			utils.SendError401Response(c, stringResource.GetStrings().TokenJwtIsRequired(c))
 			c.Abort() // Stop the request
 			return
 		}
@@ -21,14 +21,14 @@ func JWTMiddleware(repo repository.JWTRepository) gin.HandlerFunc {
 		// Validate the token
 		ok, err := utils.ValidateToken(token)
 		if err != nil || !ok {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
+			utils.SendError401Response(c, stringResource.GetStrings().TokenJwtIsNotValid(c))
 			c.Abort() // Stop the request
 			return
 		}
 
 		// Check the token in the database
 		if !repo.IsTokenValid(token) { // This function should be implemented in your repository
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Token not found or invalid"})
+			utils.SendError401Response(c, stringResource.GetStrings().UserNotFound(c))
 			c.Abort() // Stop the request
 			return
 		}

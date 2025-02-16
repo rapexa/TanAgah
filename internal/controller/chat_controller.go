@@ -3,6 +3,8 @@ package controller
 import (
 	"TanAgah/internal/model"
 	"TanAgah/internal/service"
+	"TanAgah/internal/stringResource"
+	"TanAgah/internal/utils"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -40,17 +42,17 @@ func (cm *MessageController) GetChatHistory(c *gin.Context) {
 
 	messages, err := cm.MessageService.GetChatHistory(uint(senderID), uint(receiverID))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve chat history"})
+		utils.SendDataError500(c, stringResource.GetStrings().RetrieveHistoryError(c))
 		return
 	}
 
-	c.JSON(http.StatusOK, messages)
+	utils.SendSuccessResponse(c, messages, err)
 }
 
 func (cm *MessageController) ChatWebSocket(c *gin.Context) {
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "WebSocket upgrade failed"})
+		utils.SendError400Response(c, stringResource.GetStrings().WebSocketUpgradeError(c))
 		return
 	}
 

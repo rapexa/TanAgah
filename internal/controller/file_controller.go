@@ -36,19 +36,19 @@ func (cf *FileController) HandleFileUpload(ctx *gin.Context) {
 
 	form, err := ctx.MultipartForm()
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, model.UploadResponse{
+		utils.SendResponseWithCode(ctx, model.UploadResponse{
 			Status:  "error",
-			Message: "Invalid request format",
-		})
+			Message: stringResource.GetStrings().BadRequest(ctx),
+		}, err, http.StatusBadRequest)
 		return
 	}
 
 	files := form.File["file"]
 	if len(files) == 0 {
-		ctx.JSON(http.StatusBadRequest, model.UploadResponse{
+		utils.SendResponseWithCode(ctx, model.UploadResponse{
 			Status:  "error",
-			Message: "No files uploaded",
-		})
+			Message: stringResource.GetStrings().NoFilesUploaded(ctx),
+		}, err, http.StatusBadRequest)
 		return
 	}
 
@@ -65,16 +65,16 @@ func (cf *FileController) HandleFileUpload(ctx *gin.Context) {
 	}
 
 	if len(errors) > 0 {
-		ctx.JSON(http.StatusPartialContent, model.UploadResponse{
+		utils.SendResponseWithCode(ctx, model.UploadResponse{
 			Status:  "partial",
 			Files:   uploadedFiles,
 			Message: fmt.Sprintf("%d files failed to upload", len(errors)),
-		})
+		}, err, http.StatusPartialContent)
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, model.UploadResponse{
+	utils.SendResponseWithCode(ctx, model.UploadResponse{
 		Status: "success",
 		Files:  uploadedFiles,
-	})
+	}, err, http.StatusCreated)
 }

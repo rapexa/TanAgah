@@ -16,6 +16,16 @@ func SendSuccessResponse(c *gin.Context, res any, err any) {
 	}
 }
 
+func SendResponseWithCode(c *gin.Context, res any, err any, httpCode int) {
+	c.Writer.Header().Set("Content-Type", "application/json")
+	if err != nil {
+		c.Writer.WriteHeader(httpCode)
+		c.JSON(httpCode, gin.H{"error": stringResource.GetStrings().UnknownError(c)})
+	} else {
+		c.JSON(httpCode, res)
+	}
+}
+
 func SendError400Response(c *gin.Context, err string) {
 	c.Writer.Header().Set("Content-Type", "application/json")
 	c.Writer.WriteHeader(http.StatusBadRequest)

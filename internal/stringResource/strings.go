@@ -15,6 +15,24 @@ func (pr *ImplementationStrings) DoubleSpending(c *gin.Context) string {
 	return defaultStr
 }
 
+func (pr *ImplementationStrings) WebSocketUpgradeError(c *gin.Context) string {
+	defaultStr := "WebSocket upgrade failed"
+	switch GetLng(c) {
+	case "fa":
+		return "خطا در به روز رسانی وب سوکت"
+	}
+	return defaultStr
+}
+
+func (pr *ImplementationStrings) RetrieveHistoryError(c *gin.Context) string {
+	defaultStr := "Failed to retrieve chat history"
+	switch GetLng(c) {
+	case "fa":
+		return "خطا در دریافت تارخچه گفتگو"
+	}
+	return defaultStr
+}
+
 func (pr *ImplementationStrings) PasswordError(c *gin.Context) string {
 	defaultStr := "Password must be more than 8 characters and requires a number, lowercase letter, uppercase letter and a symbol."
 	switch GetLng(c) {
@@ -60,6 +78,15 @@ func (pr *ImplementationStrings) UserNotFound(c *gin.Context) string {
 	return defaultStr
 }
 
+func (pr *ImplementationStrings) NoFilesUploaded(c *gin.Context) string {
+	defaultStr := "No files uploaded"
+	switch GetLng(c) {
+	case "fa":
+		return " هیچ قایلی اپلود نشده است"
+	}
+	return defaultStr
+}
+
 func (pr *ImplementationStrings) UserDeleteSuccess(c *gin.Context) string {
 	defaultStr := "User deleted successfully"
 	switch GetLng(c) {
@@ -69,11 +96,20 @@ func (pr *ImplementationStrings) UserDeleteSuccess(c *gin.Context) string {
 	return defaultStr
 }
 
-func (pr *ImplementationStrings) UserIdIsRequired(c *gin.Context) string {
-	defaultStr := "User id is required"
+func (pr *ImplementationStrings) TokenJwtIsRequired(c *gin.Context) string {
+	defaultStr := "token jwt is required"
 	switch GetLng(c) {
 	case "fa":
-		return "شناسه کاربر ضروری است"
+		return "شناسه jwt ضروری است"
+	}
+	return defaultStr
+}
+
+func (pr *ImplementationStrings) TokenJwtIsNotValid(c *gin.Context) string {
+	defaultStr := "token jwt is not valid"
+	switch GetLng(c) {
+	case "fa":
+		return "شناسه jwt کاربر معتبر نمیباشد"
 	}
 	return defaultStr
 }

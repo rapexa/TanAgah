@@ -3,9 +3,13 @@ package stringResource
 import "github.com/gin-gonic/gin"
 
 type Strings interface {
-	UserIdIsRequired(c *gin.Context) string
+	TokenJwtIsRequired(c *gin.Context) string
+	TokenJwtIsNotValid(c *gin.Context) string
 	UserNotFound(c *gin.Context) string
+	NoFilesUploaded(c *gin.Context) string
 	UserDeleteSuccess(c *gin.Context) string
+	RetrieveHistoryError(c *gin.Context) string
+	WebSocketUpgradeError(c *gin.Context) string
 	OtpIsNotValid(c *gin.Context) string
 	BadRequest(c *gin.Context) string
 	UnknownError(c *gin.Context) string
